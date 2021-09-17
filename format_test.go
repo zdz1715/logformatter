@@ -30,7 +30,7 @@ func TestLog(t *testing.T) {
 				ExecExceptionStack: string(debug.Stack()),
 			},
 		})
-		//fmt.Printf("%+v", data)
+		//fmt.Printf("%+v", formatter)
 		if err := formatter.Handle(); err != nil {
 			t.Logf("err: %s", err.Error())
 		}
@@ -68,7 +68,7 @@ func TestExtraLog(t *testing.T) {
 			"select * from table2",
 		})
 
-		//fmt.Printf("%+v", data)
+		//fmt.Printf("%+v", formatter)
 		if err := formatter.Handle(); err != nil {
 			t.Logf("err: %s", err.Error())
 		}
