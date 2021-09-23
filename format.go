@@ -27,7 +27,7 @@ type Context struct {
 
 type Exec struct {
 	ExecMs             float64 `json:"exec_ms"`
-	ExecException      error   `json:"exec_exception"`
+	ExecException      string  `json:"exec_exception"`
 	ExecExceptionStack string  `json:"exec_exception_stack"`
 }
 
@@ -52,7 +52,7 @@ type HttpRequest struct {
 
 func (u *FormatterParams) SetError(err error, stacks ...string) *FormatterParams {
 	if err != nil {
-		u.ExecException = err
+		u.ExecException = err.Error()
 		if len(stacks) > 0 {
 			u.ExecExceptionStack = stacks[0]
 		}

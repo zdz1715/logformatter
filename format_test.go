@@ -1,13 +1,14 @@
 package logformatter
 
 import (
+	"errors"
 	"net/http"
 	"runtime/debug"
 	"testing"
 )
 
-func TestLog(t *testing.T) {
-	for i := 0; i <= 1000; i++ {
+func Benchmark_Log(b *testing.B) {
+	for i := 0; i <= b.N; i++ {
 		formatter := NewContext(Context{
 			HttpRequest: HttpRequest{
 				FullUrl:       "http://c.biancheng.net/view/124.html",
@@ -25,20 +26,20 @@ func TestLog(t *testing.T) {
 				ResponseStatusCode: 200,
 			},
 			Exec: Exec{
-				ExecMs:             1.2,
-				ExecException:      nil,
-				ExecExceptionStack: string(debug.Stack()),
+				ExecMs: 1.2,
 			},
 		})
-		//fmt.Printf("%+v", formatter)
+		// 增加错误记录
+		formatter.SetError(errors.New("it is a bug. "), string(debug.Stack()))
+
 		if err := formatter.Handle(); err != nil {
-			t.Logf("err: %s", err.Error())
+			b.Logf("err: %s", err.Error())
 		}
 	}
 }
 
-func TestExtraLog(t *testing.T) {
-	for i := 0; i <= 1000; i++ {
+func Benchmark_ExtraLog(b *testing.B) {
+	for i := 0; i <= b.N; i++ {
 		formatter := NewContext(Context{
 			HttpRequest: HttpRequest{
 				FullUrl:       "http://c.biancheng.net/view/124.html",
@@ -57,7 +58,7 @@ func TestExtraLog(t *testing.T) {
 			},
 			Exec: Exec{
 				ExecMs:             1.2,
-				ExecException:      nil,
+				ExecException:      errors.New("it is a bug. ").Error(),
 				ExecExceptionStack: string(debug.Stack()),
 			},
 		})
@@ -70,7 +71,7 @@ func TestExtraLog(t *testing.T) {
 
 		//fmt.Printf("%+v", formatter)
 		if err := formatter.Handle(); err != nil {
-			t.Logf("err: %s", err.Error())
+			b.Logf("err: %s", err.Error())
 		}
 	}
 }
